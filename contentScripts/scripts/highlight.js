@@ -1,5 +1,6 @@
 var ReplacerTagName = "searchandhighlight";
 
+
 function HighlightWords(node, word, att) {
 
     if (node === undefined || !node) return;
@@ -75,8 +76,8 @@ function NormalizeTextNodes(node) {
 }
 
 
-//highlight
-function highlight(target) {
+//highlight process
+function Highlight(target) {
 
     let bodyElem = document.getElementsByTagName("body")[0];
 
@@ -88,8 +89,10 @@ function highlight(target) {
 
     //then highlight.
 
-    //split
+    //split search words which inputed by user.
     let splittedTarget = target.split(/\s+/gi);
+
+    //highlight each word.
     for (let wordIdx = 0; wordIdx < splittedTarget.length; wordIdx++) {
         let word = splittedTarget[wordIdx];
 
@@ -100,6 +103,7 @@ function highlight(target) {
         HighlightWords(bodyElem, escapedWord, "searchandhighlight-common searchandhighlight-find-color-" + (wordIdx % 8));
     }
 
+    //concatenate adjacent textnodes.
     NormalizeTextNodes(bodyElem);
 }
 
