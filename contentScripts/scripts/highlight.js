@@ -1,6 +1,6 @@
 var ReplacerTagName = "searchandhighlight";
 
-
+//explore dom tree and highlight
 function HighlightWords(node, word, att) {
 
     if (node === undefined || !node) return;
@@ -43,7 +43,7 @@ function HighlightWords(node, word, att) {
     }
 }
 
-
+//Remove highlights
 function RemoveHighlights(node) {
     if (node === undefined || !node) return;
 
@@ -77,24 +77,22 @@ function NormalizeTextNodes(node) {
 
 
 //highlight process
-function Highlight(target) {
+function Highlight(inputText) {
 
     let bodyElem = document.getElementsByTagName("body")[0];
 
-    //remove first.
+    //remove highlights before highlight.
     RemoveHighlights(bodyElem);
 
-    if (target === "" || target === null)
+    if (inputText === "" || inputText === null)
         return;
 
     //then highlight.
-
-    //split search words which inputed by user.
-    let splittedTarget = target.split(/\s+/gi);
+    let searchWords = ExtractSearchWords(inputText);
 
     //highlight each word.
-    for (let wordIdx = 0; wordIdx < splittedTarget.length; wordIdx++) {
-        let word = splittedTarget[wordIdx];
+    for (let wordIdx = 0; wordIdx < searchWords.length; wordIdx++) {
+        let word = searchWords[wordIdx];
 
         if (word === "" || word === "\n" || word === undefined)
             continue;
@@ -107,7 +105,33 @@ function Highlight(target) {
     NormalizeTextNodes(bodyElem);
 }
 
+function ExtractSearchWords(inputText) {
+    let reQuotedWord = /\".+?\"/gi;
 
+    var words = [];
+    var inputTextCopy = inputText;
+
+    //Get quoted string
+    while ((m = reQuotedWord.exec(inputText)) != null) {
+        let quotedWord = m[0];
+        // console.log(quotedWord);
+        let wordWithoutQuotes = quotedWord.replace(/"/gi, "");
+        words.push(wordWithoutQuotes);
+        inputTextCopy = inputTextCopy.replace(quotedWord, "");
+    }
+
+    //get words which are not quoted.
+    let splitted = inputTextCopy.split(/\s+/gi);
+    words = words.concat(splitted);
+
+    //sort by string length
+    words = words.sort((a, b) => b.length - a.length);
+
+    //remove empty from list
+    words = words.filter(m => m != "");
+
+    return words;
+}
 
 function RegexEscape(string) {
     return string.replace(/[.*+?^=!:${}()|[\]\/\\]/g, '\\$&'); // $&はマッチした部分文字列全体を意味します
