@@ -34,7 +34,7 @@ function initOnLoadCompleted(e) {
     //highlight after loadcompleted
     //this must be executed after the window is fully loaded
     if (document.readyState === 'complete') {
-        console.log('complete');
+        // console.log('complete');
         let bodyElem = document.getElementsByTagName("body")[0];
         // console.log(bodyElem.innerHTML);
 
@@ -59,8 +59,8 @@ function ExtractQuotedString(inputText) {
     //Get quoted string
     while ((m = reQuotedWord.exec(inputText)) != null) {
         let quotedWord = m[0];
-        result += " ";
         result += quotedWord;
+        result += " ";
     }
 
     return result;
