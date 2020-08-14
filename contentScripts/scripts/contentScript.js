@@ -30,6 +30,38 @@ function initOnLoadCompleted(e) {
                 break;
         }
     });
+
+    //highlight after loadcompleted
+    //this must be executed after the window is fully loaded
+    if (document.readyState === 'complete') {
+        console.log('complete');
+        let bodyElem = document.getElementsByTagName("body")[0];
+        // console.log(bodyElem.innerHTML);
+
+        let inputElem = document.querySelector("input[name='q']");
+        if (inputElem == null)
+            return;
+
+        let searchText = inputElem.value;
+        // console.log(searchText);
+
+        //Extract strings surrounded by `"`.
+        let quotedString = ExtractQuotedString(searchText);
+        Highlight(quotedString);
+    }
 }
 window.addEventListener("load", initOnLoadCompleted, false);
 
+function ExtractQuotedString(inputText) {
+    let reQuotedWord = /\".+?\"/gi;
+
+    let result = "";
+    //Get quoted string
+    while ((m = reQuotedWord.exec(inputText)) != null) {
+        let quotedWord = m[0];
+        result += " ";
+        result += quotedWord;
+    }
+
+    return result;
+}
