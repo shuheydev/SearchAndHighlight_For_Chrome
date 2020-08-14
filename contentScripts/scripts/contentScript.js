@@ -18,7 +18,7 @@ function initOnLoadCompleted(e) {
                 Highlight("");
                 IsHighlight = false;
                 break;
-            case 'toggle'://'Ctrl+Alt+L'Shortcut
+            case 'toggle'://'Shif+Alt+L'Shortcut
                 if (IsHighlight) {
                     Highlight("");
                     IsHighlight = false;
