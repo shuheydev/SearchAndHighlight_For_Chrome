@@ -84,3 +84,10 @@ input:checked + .slider:before {
 }
 
 
+/*for adjust elements position*/
+.top-margin{
+  margin-top: 20px;
+}
+.left-margin{
+  margin-left: 10px;
+}
