@@ -34,20 +34,22 @@ function initOnLoadCompleted(e) {
     //highlight after loadcompleted
     //this must be executed after the window is fully loaded
     if (document.readyState === 'complete') {
-        // console.log('complete');
-        let bodyElem = document.getElementsByTagName("body")[0];
-        // console.log(bodyElem.innerHTML);
+        chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
+            let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
 
-        let inputElem = document.querySelector("input[name='q']");
-        if (inputElem == null)
-            return;
+            if (isHighlightOnSearchEnabled == false)
+                return;
 
-        let searchText = inputElem.value;
-        // console.log(searchText);
+            let inputElem = document.querySelector("input[name='q']");
+            if (inputElem == null)
+                return;
 
-        //Extract strings surrounded by `"`.
-        let quotedString = ExtractQuotedString(searchText);
-        Highlight(quotedString);
+            let searchText = inputElem.value;
+
+            //Extract strings surrounded by `"`.
+            let quotedString = ExtractQuotedString(searchText);
+            Highlight(quotedString);
+        });
     }
 }
 window.addEventListener("load", initOnLoadCompleted, false);

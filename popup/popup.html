@@ -8,20 +8,32 @@
 
 <body>
 
-    Search words<br>
+    <span>Search words</span>
+    <br>
     <textarea id="textAreaTarget" rows="4" cols="40"></textarea><br>
 
-    <!-- <span>
-        <span>Highlight:</span>
-        <label class='switch'>
-            <input id='checkBoxToggleHighlight' type='checkbox'>
-            <span class="slider round">
-            </span>
-        </label>
-    </span> -->
+    <table>
+        <tr>
+            <td>
+                <button id="buttonSearch">Search</button>
+                <button id="buttonClear">Clear</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="top-margin">
+                    <span>Highlight on Google Search</span>
+                    <label class="switch left-margin">
+                        <input id="toggle_highlight_on_search" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </td>
+        </tr>
+    </table>
 
-    <button id="buttonSearch">Search</button>
-    <button id="buttonClear">Clear</button>
+    <br />
+
 
     <script src="popup.js"></script>
 </body>
