@@ -22,7 +22,24 @@
         <tr>
             <td>
                 <div class="top-margin">
-                    <span>Auto highlight</span>
+                    <span
+                        title='The words enclosed in quote(") in google search box will be automatically highlighted when execute Google search. Highlight only for search result. This has priority over "Auto highlight".'>
+                        Highlight on Google Search
+                    </span>
+                    <label class="switch left-margin">
+                        <input id="toggle_highlight_on_search" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="top-margin">
+                    <span
+                        title='The words in the textbox of this tool will be automatically highlighted when page is loaded.'>
+                        Auto highlight
+                    </span>
                     <label class="switch left-margin">
                         <input id="toggle_auto_highlight" type="checkbox">
                         <span class="slider round"></span>
@@ -31,9 +48,6 @@
             </td>
         </tr>
     </table>
-
-    <br />
-
 
     <script src="popup.js"></script>
 </body>

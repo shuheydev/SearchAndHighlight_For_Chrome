@@ -28,25 +28,54 @@ function initOnLoadCompleted(e) {
                     IsHighlight = true;
                 }
                 break;
+            case 'toggle-highlight-on-googlesearch':
+                chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
+                    let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
+                    if (isHighlightOnSearchEnabled) {
+                        let inputElem = document.querySelector("input[name='q']");
+                        if (inputElem == null)
+                            return;
+
+                        let searchText = inputElem.value;
+
+                        //Extract strings surrounded by `"`.
+                        let quotedString = ExtractQuotedString(searchText);
+                        Highlight(quotedString);
+                        IsHighlight = true;
+                    }
+                    else {
+                        Highlight("");
+                        IsHighlight = false;
+                    }
+                });
+                break;
         }
     });
 
     //highlight after loadcompleted
     //this must be executed after the window is fully loaded
     if (document.readyState === 'complete') {
-        chrome.storage.local.get("IsAutoHighlightEnabled", function (result) {
-            let isAutoHighlightEnabled = result.IsAutoHighlightEnabled;
+        chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
+            let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
 
-            if (isAutoHighlightEnabled == false)
-                return;
+            //"Highlight on Google Search" has priority over "Auto highlight". 
+            if (isHighlightOnSearchEnabled == false) {
+                AutoHighlight();
+            }
+            else {
+                let inputElem = document.querySelector("input[name='q']");
+                if (inputElem == null) {
+                    AutoHighlight();
+                }
+                else {
+                    let searchText = inputElem.value;
 
-            chrome.storage.local.get("target", function (result) {
-                let inputText = result.target;
-                if (typeof inputText === "undefined")
-                    return;
-
-                Highlight(inputText);
-            });
+                    //Extract strings surrounded by `"`.
+                    let quotedString = ExtractQuotedString(searchText);
+                    Highlight(quotedString);
+                    IsHighlight = true;
+                }
+            }
         });
     }
 }
@@ -64,4 +93,22 @@ function ExtractQuotedString(inputText) {
     }
 
     return result;
+}
+
+function AutoHighlight() {
+    chrome.storage.local.get("IsAutoHighlightEnabled", function (result) {
+        let isAutoHighlightEnabled = result.IsAutoHighlightEnabled;
+
+        if (isAutoHighlightEnabled == false)
+            return;
+
+        chrome.storage.local.get("target", function (result) {
+            let inputText = result.target;
+            if (typeof inputText === "undefined")
+                return;
+
+            Highlight(inputText);
+            IsHighlight = true;
+        });
+    });
 }
