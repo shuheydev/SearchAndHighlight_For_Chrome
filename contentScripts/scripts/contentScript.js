@@ -34,21 +34,19 @@ function initOnLoadCompleted(e) {
     //highlight after loadcompleted
     //this must be executed after the window is fully loaded
     if (document.readyState === 'complete') {
-        chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
-            let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
+        chrome.storage.local.get("IsAutoHighlightEnabled", function (result) {
+            let isAutoHighlightEnabled = result.IsAutoHighlightEnabled;
 
-            if (isHighlightOnSearchEnabled == false)
+            if (isAutoHighlightEnabled == false)
                 return;
 
-            let inputElem = document.querySelector("input[name='q']");
-            if (inputElem == null)
-                return;
+            chrome.storage.local.get("target", function (result) {
+                let inputText = result.target;
+                if (typeof inputText === "undefined")
+                    return;
 
-            let searchText = inputElem.value;
-
-            //Extract strings surrounded by `"`.
-            let quotedString = ExtractQuotedString(searchText);
-            Highlight(quotedString);
+                Highlight(inputText);
+            });
         });
     }
 }
