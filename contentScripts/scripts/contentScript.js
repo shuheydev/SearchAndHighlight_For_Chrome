@@ -8,6 +8,36 @@ var IsHighlight = false;
 //EventHandler when page loaded.
 function initOnLoadCompleted(e) {
     //add handler to event that receive message from popup page.
+    addOnMessageListener();
+
+    //highlight after loadcompleted
+    //this must be executed after the window is fully loaded
+    chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
+        let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
+
+        //"Highlight on Google Search" has priority over "Auto highlight". 
+        if (isHighlightOnSearchEnabled == false) {
+            AutoHighlight();
+        }
+        else {
+            let inputElem = document.querySelector("input[name='q']");
+            if (inputElem == null) {
+                AutoHighlight();
+            }
+            else {
+                let searchText = inputElem.value;
+
+                //Extract strings surrounded by `"`.
+                let quotedString = ExtractQuotedString(searchText);
+                Highlight(quotedString);
+                IsHighlight = true;
+            }
+        }
+    });
+}
+window.addEventListener("load", initOnLoadCompleted, false);
+
+function addOnMessageListener() {
     browser.runtime.onMessage.addListener((message) => {
         switch (message.command) {
             case 'search'://'search' button clicked.
@@ -51,35 +81,7 @@ function initOnLoadCompleted(e) {
                 break;
         }
     });
-
-    //highlight after loadcompleted
-    //this must be executed after the window is fully loaded
-    if (document.readyState === 'complete') {
-        chrome.storage.local.get("IsHighlightOnSearchEnabled", function (result) {
-            let isHighlightOnSearchEnabled = result.IsHighlightOnSearchEnabled;
-
-            //"Highlight on Google Search" has priority over "Auto highlight". 
-            if (isHighlightOnSearchEnabled == false) {
-                AutoHighlight();
-            }
-            else {
-                let inputElem = document.querySelector("input[name='q']");
-                if (inputElem == null) {
-                    AutoHighlight();
-                }
-                else {
-                    let searchText = inputElem.value;
-
-                    //Extract strings surrounded by `"`.
-                    let quotedString = ExtractQuotedString(searchText);
-                    Highlight(quotedString);
-                    IsHighlight = true;
-                }
-            }
-        });
-    }
 }
-window.addEventListener("load", initOnLoadCompleted, false);
 
 function ExtractQuotedString(inputText) {
     let reQuotedWord = /\".+?\"/gi;
